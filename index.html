@@ -2,21 +2,21 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Web Online Analisa Teknikal</title>
     <!-- TradingView Lightweight Charts CDN -->
     <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
     <style>
         :root {
-            --bg-color: #090d16;
-            --container-bg: #0d1222;
+            --bg-color: #000000;
+            --container-bg: #000000;
             --text-color: #ffffff;
             --accent-blue: #1e90ff;
             --accent-pink: #ff1493;
             --accent-gold: #ffd700;
             --accent-aqua: #00ffff;
-            --success: #00ff00;
-            --danger: #ff0000;
+            --success: #26a69a;
+            --danger: #ef5350;
         }
 
         * {
@@ -42,7 +42,6 @@
             background-color: var(--container-bg);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             border: 1px solid #1f2a45;
             display: flex;
             flex-direction: column;
@@ -53,12 +52,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #1f2a45;
-            padding-bottom: 15px;
+            border-bottom: 1px solid #1f2a45;
+            padding-bottom: 12px;
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             letter-spacing: 0.5px;
             color: #ffffff;
@@ -85,15 +84,15 @@
         }
 
         .status-api {
-            background-color: rgba(0, 255, 0, 0.15);
+            background-color: rgba(0, 255, 0, 0.1);
             color: #55ff55;
-            border: 1px solid rgba(0, 255, 0, 0.3);
+            border: 1px solid rgba(0, 255, 0, 0.2);
         }
 
         .status-mock {
-            background-color: rgba(255, 165, 0, 0.15);
+            background-color: rgba(255, 165, 0, 0.1);
             color: #ffaa00;
-            border: 1px solid rgba(255, 165, 0, 0.3);
+            border: 1px solid rgba(255, 165, 0, 0.2);
         }
 
         .pulse-dot {
@@ -111,7 +110,7 @@
             100% { opacity: 0.4; }
         }
 
-        /* Layout Penataan Responsive Chart */
+        /* Responsive Layout Grid Chart */
         .charts-wrapper {
             background-color: #000000;
             border-radius: 8px;
@@ -128,33 +127,42 @@
         }
 
         #main-chart {
-            flex: 6.5; /* Grafik utama menggunakan 65% tinggi wadah */
+            flex: 6.3; /* Pembagian porsi tinggi grafik utama */
             min-height: 300px;
         }
 
         #sub-chart {
-            flex: 3.5; /* Sub-window menggunakan 35% tinggi wadah */
+            flex: 3.7; /* Pembagian porsi tinggi sub-window */
             min-height: 180px;
             border-top: 1px solid #1f2a45;
         }
 
-        /* Responsive Breakpoint untuk Perangkat Mobile (HP) */
+        /* Kustomisasi Khusus untuk Tampilan Layar HP Agar Presisi Tanpa Terpotong */
         @media (max-width: 768px) {
             body {
-                padding: 5px;
+                padding: 0;
+                margin: 0;
+                background-color: #000000;
             }
             .container {
-                padding: 10px;
-                gap: 10px;
+                padding: 10px 5px;
+                border-radius: 0;
+                border: none;
+                max-width: 100%;
+                background-color: #000000;
             }
             header {
+                padding: 5px 10px 10px 10px;
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
             }
-            /* Menjaga proporsi proporsional di layar HP agar tidak ada grafik yang tenggelam */
+            /* Menghilangkan border lengkung luar agar presisi melebar di layar HP */
             .charts-wrapper {
                 height: 520px; 
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
             }
             #main-chart {
                 flex: 6;
@@ -163,6 +171,12 @@
             #sub-chart {
                 flex: 4;
                 min-height: 180px;
+            }
+            .controls-panel {
+                padding: 10px;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
             }
             .btn-refresh {
                 margin-left: 0;
@@ -175,7 +189,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
-            background-color: #111728;
+            background-color: #0a0e1a;
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #1f2a45;
@@ -184,15 +198,15 @@
         .controls-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
         }
 
         .btn {
-            background-color: #1a2238;
+            background-color: #151d30;
             color: #9aa8c4;
-            border: 1px solid #2d3b5e;
-            padding: 10px 18px;
+            border: 1px solid #202d4a;
+            padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
@@ -202,9 +216,9 @@
         }
 
         .btn:hover {
-            background-color: #243052;
+            background-color: #1e2a45;
             color: #ffffff;
-            border-color: #3e5285;
+            border-color: #314470;
         }
 
         .btn.active {
@@ -229,7 +243,7 @@
 
         /* Collapsible Parameter Panel */
         .accordion-header {
-            background-color: #171f35;
+            background-color: #131b2e;
             color: #ffffff;
             padding: 12px 15px;
             border-radius: 6px;
@@ -238,7 +252,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #2d3b5e;
+            border: 1px solid #202d4a;
             font-size: 13px;
         }
 
@@ -246,10 +260,10 @@
             display: none;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            background-color: #111728;
+            background-color: #0a0e1a;
             padding: 15px;
             border-radius: 6px;
-            border: 1px solid #1d2846;
+            border: 1px solid #1f2a45;
             margin-top: 5px;
         }
 
@@ -301,9 +315,9 @@
         /* Error/Info Box */
         #alert-box {
             display: none;
-            background-color: rgba(255, 0, 0, 0.15);
+            background-color: rgba(255, 0, 0, 0.1);
             color: #ff5555;
-            border: 1px solid rgba(255, 0, 0, 0.3);
+            border: 1px solid rgba(255, 0, 0, 0.2);
             padding: 10px 15px;
             border-radius: 6px;
             font-size: 12px;
@@ -414,7 +428,7 @@
     </div>
 
     <script>
-        // Global variables for caching state (Default diatur ke H1) [5]
+        // Global variables (Default H1)
         let currentPair = 'GBP/USD';
         let currentInterval = '1h'; 
         let currentLabel = 'H1';
@@ -426,7 +440,10 @@
         const subContainer = document.getElementById('sub-chart');
 
         const mainChart = LightweightCharts.createChart(mainContainer, {
-            layout: { backgroundColor: '#000000', textColor: '#cccccc' },
+            layout: { 
+                background: { type: 'solid', color: '#000000' }, 
+                textColor: '#cccccc' 
+            },
             grid: {
                 vertLines: { color: 'rgba(40, 40, 40, 0.4)' },
                 horzLines: { color: 'rgba(40, 40, 40, 0.4)' },
@@ -437,7 +454,10 @@
         });
 
         const subChart = LightweightCharts.createChart(subContainer, {
-            layout: { backgroundColor: '#000000', textColor: '#cccccc' },
+            layout: { 
+                background: { type: 'solid', color: '#000000' }, 
+                textColor: '#cccccc' 
+            },
             grid: {
                 vertLines: { color: 'rgba(40, 40, 40, 0.4)' },
                 horzLines: { color: 'rgba(40, 40, 40, 0.4)' },
@@ -447,14 +467,14 @@
             timeScale: { borderColor: '#1f2a45' },
         });
 
-        // Series untuk Main Chart
+        // Series untuk Main Chart (TradingView Modern Eyes-Friendly Style)
         const candlestickSeries = mainChart.addCandlestickSeries({
-            upColor: 'transparent', // Hollow Candle style MT4
-            downColor: '#00ff00',
-            wickUpColor: '#00ff00',
-            wickDownColor: '#00ff00',
-            borderUpColor: '#00ff00',
-            borderDownColor: '#00ff00',
+            upColor: '#26a69a',
+            downColor: '#ef5350',
+            wickUpColor: '#26a69a',
+            wickDownColor: '#ef5350',
+            borderUpColor: '#26a69a',
+            borderDownColor: '#ef5350',
         });
 
         // Main Chart Box Indicator (Ungu/Magenta di belakang candle)
@@ -467,10 +487,10 @@
             lastValueVisible: false,
         });
 
-        // 3 Garis Envelopes di Main Chart
-        const mainEnvMiddle = mainChart.addLineSeries({ color: '#1e90ff', lineWidth: 1.5, title: 'Middle' });
-        const mainEnvUpper = mainChart.addLineSeries({ color: '#ff1493', lineWidth: 1.5, title: 'Upper' });
-        const mainEnvLower = mainChart.addLineSeries({ color: '#ffffff', lineWidth: 1.5, title: 'Lower' });
+        // 3 Garis Envelopes di Main Chart (Membatalkan 'lastValueVisible' agar label di sumbu harga terhapus)
+        const mainEnvMiddle = mainChart.addLineSeries({ color: '#1e90ff', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
+        const mainEnvUpper = mainChart.addLineSeries({ color: '#ff1493', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
+        const mainEnvLower = mainChart.addLineSeries({ color: '#ffffff', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
 
         // Series untuk Sub-Window Chart (0 sampai 100)
         const subHistogram = subChart.addHistogramSeries({
@@ -511,7 +531,7 @@
             isSyncing = false;
         });
 
-        // Deteksi Perubahan Ukuran Wadah Menggunakan ResizeObserver (Sangat Handal Mencegah Chart Tenggelam)
+        // Deteksi Perubahan Ukuran Wadah Menggunakan ResizeObserver (Menjamin presisi di HP saat rotasi layar atau perubahan view)
         const resizeObserver = new ResizeObserver((entries) => {
             for (let entry of entries) {
                 const { width, height } = entry.contentRect;
@@ -539,7 +559,6 @@
             currentInterval = tf;
             currentLabel = label;
             
-            // Perbarui visual tombol yang sedang aktif
             const tfs = ['m5', 'm15', 'm30', 'h1', 'h4', 'd1'];
             tfs.forEach(t => {
                 document.getElementById(`tf-${t}`).classList.toggle('active', `tf-${t}` === `tf-${tf.toLowerCase()}`);
@@ -561,12 +580,12 @@
                 box.textContent = msg;
                 box.style.display = 'block';
                 if (type === 'info') {
-                    box.style.backgroundColor = 'rgba(30, 144, 255, 0.15)';
-                    box.style.borderColor = 'rgba(30, 144, 255, 0.3)';
+                    box.style.backgroundColor = 'rgba(30, 144, 255, 0.1)';
+                    box.style.borderColor = 'rgba(30, 144, 255, 0.2)';
                     box.style.color = '#7dc0ff';
                 } else {
-                    box.style.backgroundColor = 'rgba(255, 0, 0, 0.15)';
-                    box.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+                    box.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+                    box.style.borderColor = 'rgba(255, 0, 0, 0.2)';
                     box.style.color = '#ff5555';
                 }
             } else {
@@ -624,7 +643,7 @@
             fetchMarketData();
         }
 
-        // Helper parsing datetime menjadi format UNIX timestamp
+        // Helper parsing datetime
         function parseDatetime(datetimeStr) {
             const parts = datetimeStr.split(' ');
             if (parts.length === 2) {
