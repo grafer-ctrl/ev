@@ -127,12 +127,12 @@
         }
 
         #main-chart {
-            flex: 6.3; /* Pembagian porsi tinggi grafik utama */
+            flex: 6.3; 
             min-height: 300px;
         }
 
         #sub-chart {
-            flex: 3.7; /* Pembagian porsi tinggi sub-window */
+            flex: 3.7; 
             min-height: 180px;
             border-top: 1px solid #1f2a45;
         }
@@ -399,7 +399,7 @@
                     </div>
                     <div class="param-row">
                         <label>High Level (Sell Limit)</label>
-                        <input type="number" id="inp-vbox-high" value="85" onchange="recalculateAndRender()">
+                        <input type="number" id="inp-vbox-high" value="80" onchange="recalculateAndRender()"> <!-- Default diubah ke 80 -->
                     </div>
                     <div class="param-row">
                         <label>Low Level (Buy Limit)</label>
@@ -428,7 +428,7 @@
     </div>
 
     <script>
-        // Global variables (Default H1)
+        // Global variables (Default H1) [5]
         let currentPair = 'GBP/USD';
         let currentInterval = '1h'; 
         let currentLabel = 'H1';
@@ -449,8 +449,30 @@
                 horzLines: { color: 'rgba(40, 40, 40, 0.4)' },
             },
             crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-            priceScale: { borderColor: '#1f2a45' },
+            priceScale: { 
+                borderColor: '#1f2a45',
+                autoScale: true, 
+            },
             timeScale: { visible: false, borderColor: '#1f2a45' }, 
+            // KUNCI DAN BATASI INTERAKSI MOBILITAS (Anti Squeeze / Lompat Skala)
+            handleScale: {
+                axisPressedMouseMove: {
+                    time: true,
+                    price: false, // Menghalangi drag skala harga atas-bawah
+                },
+                axisDoubleClickReset: {
+                    time: true,
+                    price: true,
+                },
+                mouseWheel: false, // Mematikan scroll zoom mouse
+                pinch: false,      // Mematikan cubit zoom layar HP
+            },
+            handleScroll: {
+                mouseWheel: false,
+                pressedMouseMove: true,
+                horzTouchDrag: true,  // Mengizinkan geser kiri-kanan melihat histori
+                vertTouchDrag: false, // Mematikan geser atas-bawah layar agar tetap kokoh
+            }
         });
 
         const subChart = LightweightCharts.createChart(subContainer, {
@@ -463,11 +485,32 @@
                 horzLines: { color: 'rgba(40, 40, 40, 0.4)' },
             },
             crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-            priceScale: { borderColor: '#1f2a45' },
+            priceScale: { 
+                borderColor: '#1f2a45',
+                autoScale: true,
+            },
             timeScale: { borderColor: '#1f2a45' },
+            handleScale: {
+                axisPressedMouseMove: {
+                    time: true,
+                    price: false,
+                },
+                axisDoubleClickReset: {
+                    time: true,
+                    price: true,
+                },
+                mouseWheel: false,
+                pinch: false,
+            },
+            handleScroll: {
+                mouseWheel: false,
+                pressedMouseMove: true,
+                horzTouchDrag: true,
+                vertTouchDrag: false,
+            }
         });
 
-        // Series untuk Main Chart (TradingView Modern Eyes-Friendly Style)
+        // Series untuk Main Chart (TradingView Modern Style)
         const candlestickSeries = mainChart.addCandlestickSeries({
             upColor: '#26a69a',
             downColor: '#ef5350',
@@ -487,7 +530,7 @@
             lastValueVisible: false,
         });
 
-        // 3 Garis Envelopes di Main Chart (Membatalkan 'lastValueVisible' agar label di sumbu harga terhapus)
+        // 3 Garis Envelopes di Main Chart
         const mainEnvMiddle = mainChart.addLineSeries({ color: '#1e90ff', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
         const mainEnvUpper = mainChart.addLineSeries({ color: '#ff1493', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
         const mainEnvLower = mainChart.addLineSeries({ color: '#ffffff', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
@@ -511,10 +554,6 @@
         const subBoundary0 = subChart.addLineSeries({ color: 'transparent', lineWidth: 0, priceLineVisible: false, lastValueVisible: false });
         const subBoundary100 = subChart.addLineSeries({ color: 'transparent', lineWidth: 0, priceLineVisible: false, lastValueVisible: false });
 
-        // Arrow signals (Warna dasar: Buy = Putih, Sell = Merah)
-        const buyArrowSeries = subChart.addLineSeries({ color: '#ffffff', lineWidth: 0, lineVisible: false, priceLineVisible: false, lastValueVisible: false });
-        const sellArrowSeries = subChart.addLineSeries({ color: '#ff0000', lineWidth: 0, lineVisible: false, priceLineVisible: false, lastValueVisible: false });
-
         // Sinkronisasi Interaksi Zoom/Scroll kedua chart [5]
         let isSyncing = false;
         mainChart.timeScale().subscribeVisibleTimeRangeChange((range) => {
@@ -531,7 +570,7 @@
             isSyncing = false;
         });
 
-        // Deteksi Perubahan Ukuran Wadah Menggunakan ResizeObserver (Menjamin presisi di HP saat rotasi layar atau perubahan view)
+        // Deteksi Perubahan Ukuran Wadah Menggunakan ResizeObserver
         const resizeObserver = new ResizeObserver((entries) => {
             for (let entry of entries) {
                 const { width, height } = entry.contentRect;
@@ -656,14 +695,15 @@
             }
         }
 
-        // Fallback generator simulasi real-time
+        // Fallback generator simulasi real-time sesuai pemetaan detik TF secara presisi
         function generateSimulatedData(pair, interval, count) {
             const data = [];
             let price = pair === 'GBP/USD' ? 1.2500 : 1.0800;
-            let secondsPerBar = 3600; // default 1h
+            let secondsPerBar = 3600; 
             if (interval === '5min') secondsPerBar = 300;
             else if (interval === '15min') secondsPerBar = 900;
             else if (interval === '30min') secondsPerBar = 1800;
+            else if (interval === '1h') secondsPerBar = 3600;
             else if (interval === '4h') secondsPerBar = 14400;
             else if (interval === '1day') secondsPerBar = 86400;
 
@@ -694,7 +734,7 @@
 
             const lookback = parseInt(document.getElementById('inp-vbox-lookback').value) || 14;
             const smooth = parseInt(document.getElementById('inp-vbox-smooth').value) || 3;
-            const highLevel = parseFloat(document.getElementById('inp-vbox-high').value) || 85;
+            const highLevel = parseFloat(document.getElementById('inp-vbox-high').value) || 80;
             const lowLevel = parseFloat(document.getElementById('inp-vbox-low').value) || 15;
 
             const useEnvFilter = document.getElementById('inp-env-filter').checked;
@@ -732,7 +772,7 @@
             }
             subHistogram.setData(subHistData);
 
-            // 5. Gambar Garis Level Statis 15 & 85
+            // 5. Gambar Garis Level Statis 15 & 80
             const levelHighData = rawPriceData.map(d => ({ time: d.time, value: highLevel }));
             const levelLowData = rawPriceData.map(d => ({ time: d.time, value: lowLevel }));
             subLevelHigh.setData(levelHighData);
@@ -758,24 +798,9 @@
             subEnvUpper.setData(subEnv.upper);
             subEnvLower.setData(subEnv.lower);
 
-            // Sinyal Panah: Buy = Putih (#ffffff), Sell = Merah (#ff0000)
-            buyArrowSeries.setData(subEnv.buyArrows);
-            buyArrowSeries.setMarkers(subEnv.buyArrows.map(a => ({
-                time: a.time,
-                position: 'atBar',
-                color: '#ffffff', 
-                shape: 'arrowUp',
-                size: 2
-            })));
-
-            sellArrowSeries.setData(subEnv.sellArrows);
-            sellArrowSeries.setMarkers(subEnv.sellArrows.map(a => ({
-                time: a.time,
-                position: 'atBar',
-                color: '#ff0000', 
-                shape: 'arrowDown',
-                size: 2
-            })));
+            // Penerapan Sinyal Panah: Buy (Putih) diikat pada Level 15, Sell (Merah) diikat pada Level 80
+            subLevelLow.setMarkers(subEnv.buyMarkers);
+            subLevelHigh.setMarkers(subEnv.sellMarkers);
         }
 
         // Rumus Envelopes standard (SMA ± Deviasi)
@@ -855,45 +880,68 @@
         function calculateSubWindowEnvelopesAndSignals(data, vbox, envPeriod, envDev, highLevel, lowLevel, useFilter) {
             const upper = [];
             const lower = [];
-            const buyArrows = [];
-            const sellArrows = [];
+            const buyMarkers = [];
+            const sellMarkers = [];
 
             for (let i = 0; i < vbox.length; i++) {
-                if (i < envPeriod - 1) continue;
+                let upVal = NaN;
+                let dnVal = NaN;
 
-                // Hitung SMA dari nilai VBox
-                let sum = 0;
-                for (let k = 0; k < envPeriod; k++) {
-                    sum += vbox[i - k];
+                if (i >= envPeriod - 1) {
+                    let sum = 0;
+                    for (let k = 0; k < envPeriod; k++) {
+                        sum += vbox[i - k];
+                    }
+                    const baseMA = sum / envPeriod;
+
+                    upVal = baseMA * (1.0 + envDev / 100.0);
+                    dnVal = baseMA * (1.0 - envDev / 100.0);
+
+                    upVal = Math.min(100.0, upVal);
+                    dnVal = Math.max(0.0, dnVal);
+
+                    upper.push({ time: data[i].time, value: upVal });
+                    lower.push({ time: data[i].time, value: dnVal });
                 }
-                const baseMA = sum / envPeriod;
 
-                let upVal = baseMA * (1.0 + envDev / 100.0);
-                let dnVal = baseMA * (1.0 - envDev / 100.0);
-
-                upVal = Math.min(100.0, upVal);
-                dnVal = Math.max(0.0, dnVal);
-
-                upper.push({ time: data[i].time, value: upVal });
-                lower.push({ time: data[i].time, value: dnVal });
-
+                // Sinyal Sinyal
                 const currentVal = vbox[i];
                 let isBuy = currentVal <= lowLevel;
                 let isSell = currentVal >= highLevel;
 
-                if (useFilter) {
+                if (useFilter && !isNaN(upVal) && !isNaN(dnVal)) {
                     isBuy = isBuy && (currentVal <= dnVal);
                     isSell = isSell && (currentVal >= upVal);
+                } else if (useFilter && (isNaN(upVal) || isNaN(dnVal))) {
+                    isBuy = false;
+                    isSell = false;
                 }
 
                 if (isBuy) {
-                    buyArrows.push({ time: data[i].time, value: lowLevel });
+                    buyMarkers.push({
+                        time: data[i].time,
+                        position: 'atBar',
+                        color: '#ffffff', // Putih saat buy
+                        shape: 'arrowUp',
+                        size: 2
+                    });
                 } else if (isSell) {
-                    sellArrows.push({ time: data[i].time, value: highLevel });
+                    sellMarkers.push({
+                        time: data[i].time,
+                        position: 'atBar',
+                        color: '#ff0000', // Merah saat sell
+                        shape: 'arrowDown',
+                        size: 2
+                    });
                 }
             }
 
-            return { upper, lower, buyArrows, sellArrows };
+            return { 
+                upper: upper.filter(d => !isNaN(d.value)), 
+                lower: lower.filter(d => !isNaN(d.value)), 
+                buyMarkers, 
+                sellMarkers 
+            };
         }
 
         // Memulai pengambilan data inisial saat aplikasi diluncurkan
