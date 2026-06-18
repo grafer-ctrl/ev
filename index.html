@@ -29,7 +29,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -58,7 +58,7 @@
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             letter-spacing: 0.5px;
             color: #ffffff;
@@ -75,7 +75,7 @@
         }
 
         .status-badge {
-            font-size: 12px;
+            font-size: 11px;
             padding: 6px 12px;
             border-radius: 20px;
             font-weight: bold;
@@ -111,56 +111,63 @@
             100% { opacity: 0.4; }
         }
 
-        /* Chart Canvas Layout */
+        /* Layout Penataan Responsive Chart */
         .charts-wrapper {
-            position: relative;
             background-color: #000000;
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid #1f2a45;
             display: flex;
             flex-direction: column;
+            height: 650px; /* Tinggi default di desktop */
         }
 
         .chart-pane {
-            position: relative;
             width: 100%;
+            position: relative;
         }
 
         #main-chart {
-            height: 400px;
+            flex: 6.5; /* Grafik utama menggunakan 65% tinggi wadah */
+            min-height: 300px;
         }
 
         #sub-chart {
-            height: 250px;
+            flex: 3.5; /* Sub-window menggunakan 35% tinggi wadah */
+            min-height: 180px;
             border-top: 1px solid #1f2a45;
         }
 
-        /* Visual Label Overlays */
-        .chart-label {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            z-index: 10;
-            background-color: rgba(0, 0, 0, 0.75);
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 11px;
-            border: 1px solid #333;
-            max-width: 320px;
-            line-height: 1.5;
-            pointer-events: none;
-        }
-
-        .chart-label strong {
-            display: block;
-            margin-bottom: 4px;
-            color: var(--accent-gold);
-            font-size: 12px;
-        }
-
-        .chart-label ol {
-            padding-left: 15px;
+        /* Responsive Breakpoint untuk Perangkat Mobile (HP) */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                padding: 10px;
+                gap: 10px;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            /* Menjaga proporsi proporsional di layar HP agar tidak ada grafik yang tenggelam */
+            .charts-wrapper {
+                height: 520px; 
+            }
+            #main-chart {
+                flex: 6;
+                min-height: 280px;
+            }
+            #sub-chart {
+                flex: 4;
+                min-height: 180px;
+            }
+            .btn-refresh {
+                margin-left: 0;
+                width: 100%;
+            }
         }
 
         /* Control Panel Styles */
@@ -189,7 +196,7 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.2s ease;
             text-transform: uppercase;
         }
@@ -232,7 +239,7 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid #2d3b5e;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .accordion-content {
@@ -257,7 +264,7 @@
         }
 
         .param-group h3 {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--accent-gold);
             border-bottom: 1px solid #222e50;
             padding-bottom: 5px;
@@ -268,7 +275,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .param-row label {
@@ -299,24 +306,8 @@
             border: 1px solid rgba(255, 0, 0, 0.3);
             padding: 10px 15px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             text-align: center;
-        }
-
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .btn-refresh {
-                margin-left: 0;
-                width: 100%;
-            }
-            #main-chart { height: 300px; }
-            #sub-chart { height: 200px; }
-            .chart-label { display: none; } /* Hide labels on very small screens to fit graph */
         }
     </style>
 </head>
@@ -338,26 +329,9 @@
         <!-- Charts Container Grid -->
         <div class="charts-wrapper">
             <!-- Upper Chart Pane -->
-            <div class="chart-pane">
-                <div id="main-chart"></div>
-                <div class="chart-label">
-                    <strong>CHART ATAS TERDIRI DARI 2 INDICATOR :</strong>
-                    <ol>
-                        <li>Histogram indicator (Visual box ungu)</li>
-                        <li>ENVELOP 3 garis (Merah, Biru, Hijau)</li>
-                    </ol>
-                </div>
-            </div>
+            <div id="main-chart" class="chart-pane"></div>
             <!-- Lower Chart Pane (Sub Window) -->
-            <div class="chart-pane">
-                <div id="sub-chart"></div>
-                <div class="chart-label">
-                    <strong>terdiri 1 indicator :</strong>
-                    <ol>
-                        <li>envelopdanhisto (Histogram Dodger Blue & Deep Pink, filter envelopes dinamis, serta panah sinyal statis pada level 15 & 85)</li>
-                    </ol>
-                </div>
-            </div>
+            <div id="sub-chart" class="chart-pane"></div>
         </div>
 
         <!-- Dashboard Controls Area -->
@@ -370,8 +344,8 @@
                 <!-- Timeframe Selector -->
                 <button class="btn" id="tf-m5" onclick="setTimeframe('5min', 'M5')">M5</button>
                 <button class="btn" id="tf-m15" onclick="setTimeframe('15min', 'M15')">M15</button>
-                <button class="btn active" id="tf-m30" onclick="setTimeframe('30min', 'M30')">M30</button>
-                <button class="btn" id="tf-h1" onclick="setTimeframe('1h', 'H1')">H1</button>
+                <button class="btn" id="tf-m30" onclick="setTimeframe('30min', 'M30')">M30</button>
+                <button class="btn active" id="tf-h1" onclick="setTimeframe('1h', 'H1')">H1</button>
                 <button class="btn" id="tf-h4" onclick="setTimeframe('4h', 'H4')">H4</button>
                 <button class="btn" id="tf-d1" onclick="setTimeframe('1day', 'D1')">D1</button>
 
@@ -440,11 +414,11 @@
     </div>
 
     <script>
-        // Global variables for caching state
+        // Global variables for caching state (Default diatur ke H1) [5]
         let currentPair = 'GBP/USD';
-        let currentInterval = '30min';
-        let currentLabel = 'M30';
-        let rawPriceData = []; // Cached prices
+        let currentInterval = '1h'; 
+        let currentLabel = 'H1';
+        let rawPriceData = []; 
         const twelveDataApiKey = '8cd5e84fa4564322b907aaddac29b059';
 
         // ----------------- INTI CHART RENDERING (Lightweight Charts) -----------------
@@ -459,7 +433,7 @@
             },
             crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
             priceScale: { borderColor: '#1f2a45' },
-            timeScale: { visible: false, borderColor: '#1f2a45' }, // Disembunyikan karena disinkronkan dengan sub-chart
+            timeScale: { visible: false, borderColor: '#1f2a45' }, 
         });
 
         const subChart = LightweightCharts.createChart(subContainer, {
@@ -485,7 +459,7 @@
 
         // Main Chart Box Indicator (Ungu/Magenta di belakang candle)
         const boxHistSeries = mainChart.addAreaSeries({
-            topColor: 'rgba(186, 85, 211, 0.45)', // Medium Orchid Purple
+            topColor: 'rgba(186, 85, 211, 0.45)', 
             bottomColor: 'rgba(186, 85, 211, 0.45)',
             lineColor: 'transparent',
             lineWidth: 0,
@@ -517,9 +491,9 @@
         const subBoundary0 = subChart.addLineSeries({ color: 'transparent', lineWidth: 0, priceLineVisible: false, lastValueVisible: false });
         const subBoundary100 = subChart.addLineSeries({ color: 'transparent', lineWidth: 0, priceLineVisible: false, lastValueVisible: false });
 
-        // Arrow signals
+        // Arrow signals (Warna dasar: Buy = Putih, Sell = Merah)
         const buyArrowSeries = subChart.addLineSeries({ color: '#ffffff', lineWidth: 0, lineVisible: false, priceLineVisible: false, lastValueVisible: false });
-        const sellArrowSeries = subChart.addLineSeries({ color: '#ffff00', lineWidth: 0, lineVisible: false, priceLineVisible: false, lastValueVisible: false });
+        const sellArrowSeries = subChart.addLineSeries({ color: '#ff0000', lineWidth: 0, lineVisible: false, priceLineVisible: false, lastValueVisible: false });
 
         // Sinkronisasi Interaksi Zoom/Scroll kedua chart [5]
         let isSyncing = false;
@@ -537,11 +511,20 @@
             isSyncing = false;
         });
 
-        // Resize otomatis saat jendela browser berubah ukuran
-        window.addEventListener('resize', () => {
-            mainChart.resize(mainContainer.clientWidth, 400);
-            subChart.resize(subContainer.clientWidth, 250);
+        // Deteksi Perubahan Ukuran Wadah Menggunakan ResizeObserver (Sangat Handal Mencegah Chart Tenggelam)
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                const { width, height } = entry.contentRect;
+                if (width === 0 || height === 0) continue;
+                if (entry.target.id === 'main-chart') {
+                    mainChart.resize(width, height);
+                } else if (entry.target.id === 'sub-chart') {
+                    subChart.resize(width, height);
+                }
+            }
         });
+        resizeObserver.observe(mainContainer);
+        resizeObserver.observe(subContainer);
 
         // ----------------- AMBIL DATA & KONTROL UI -----------------
 
@@ -610,7 +593,6 @@
                     throw new Error("Gagal menerima nilai data dari API.");
                 }
 
-                // Parser data dari Twelve Data ke Lightweight Charts (Data diurutkan dari tertua ke terbaru)
                 rawPriceData = data.values.reverse().map(d => ({
                     time: parseDatetime(d.datetime),
                     open: parseFloat(d.open),
@@ -628,7 +610,6 @@
             } catch (err) {
                 console.warn("Kesalahan API, menggunakan Fallback Data Simulasi: ", err.message);
                 
-                // fallback ke data simulasi interaktif
                 rawPriceData = generateSimulatedData(currentPair, currentInterval, 200);
                 
                 statusIndicator.className = "status-badge status-mock";
@@ -643,7 +624,7 @@
             fetchMarketData();
         }
 
-        // Helper untuk mem-parsing datetime menjadi format UNIX timestamp detik
+        // Helper parsing datetime menjadi format UNIX timestamp
         function parseDatetime(datetimeStr) {
             const parts = datetimeStr.split(' ');
             if (parts.length === 2) {
@@ -656,14 +637,14 @@
             }
         }
 
-        // Generator fallback data jika limit akses API habis
+        // Fallback generator simulasi real-time
         function generateSimulatedData(pair, interval, count) {
             const data = [];
             let price = pair === 'GBP/USD' ? 1.2500 : 1.0800;
-            let secondsPerBar = 1800;
+            let secondsPerBar = 3600; // default 1h
             if (interval === '5min') secondsPerBar = 300;
             else if (interval === '15min') secondsPerBar = 900;
-            else if (interval === '1h') secondsPerBar = 3600;
+            else if (interval === '30min') secondsPerBar = 1800;
             else if (interval === '4h') secondsPerBar = 14400;
             else if (interval === '1day') secondsPerBar = 86400;
 
@@ -689,7 +670,6 @@
         function recalculateAndRender() {
             if (rawPriceData.length === 0) return;
 
-            // Membaca pengaturan input dari panel UI
             const maPeriod = parseInt(document.getElementById('inp-ma-period').value) || 14;
             const maDev = parseFloat(document.getElementById('inp-ma-dev').value) || 0.10;
 
@@ -705,7 +685,7 @@
             // 1. Gambar Candle Utama
             candlestickSeries.setData(rawPriceData);
 
-            // 2. Gambar Box Histogram Ungu di Layar Utama (Ungu/Magenta menempel dari low ke harga 0)
+            // 2. Gambar Box Histogram Ungu di Layar Utama
             const mainBoxData = rawPriceData.map(d => ({
                 time: d.time,
                 value: d.low
@@ -759,12 +739,12 @@
             subEnvUpper.setData(subEnv.upper);
             subEnvLower.setData(subEnv.lower);
 
-            // Sinyal Panah Persis di level 15 dan 85
+            // Sinyal Panah: Buy = Putih (#ffffff), Sell = Merah (#ff0000)
             buyArrowSeries.setData(subEnv.buyArrows);
             buyArrowSeries.setMarkers(subEnv.buyArrows.map(a => ({
                 time: a.time,
                 position: 'atBar',
-                color: '#ffffff',
+                color: '#ffffff', 
                 shape: 'arrowUp',
                 size: 2
             })));
@@ -773,7 +753,7 @@
             sellArrowSeries.setMarkers(subEnv.sellArrows.map(a => ({
                 time: a.time,
                 position: 'atBar',
-                color: '#ffff00',
+                color: '#ff0000', 
                 shape: 'arrowDown',
                 size: 2
             })));
@@ -802,7 +782,7 @@
             return { middle, upper, lower };
         }
 
-        // Kalkulasi nilai %K Stochastic sebagai representasi dasar VBox
+        // Kalkulasi %K Stochastic Oscillator (Representasi VBox)
         function calculateVBoxIndicator(data, lookback, smooth) {
             const rawVBox = [];
 
@@ -852,7 +832,7 @@
             return smoothedVBox;
         }
 
-        // Kalkulasi filter envelope pada nilai indikator di sub-window, dan pembuatan koordinat panah sinyal
+        // Kalkulasi envelope filter di sub-window, dan penyediaan koordinat sinyal panah
         function calculateSubWindowEnvelopesAndSignals(data, vbox, envPeriod, envDev, highLevel, lowLevel, useFilter) {
             const upper = [];
             const lower = [];
@@ -878,7 +858,6 @@
                 upper.push({ time: data[i].time, value: upVal });
                 lower.push({ time: data[i].time, value: dnVal });
 
-                // Evaluasi Logika Sinyal (Hanya di level ekstrim 15 & 85)
                 const currentVal = vbox[i];
                 let isBuy = currentVal <= lowLevel;
                 let isSell = currentVal >= highLevel;
@@ -888,7 +867,6 @@
                     isSell = isSell && (currentVal >= upVal);
                 }
 
-                // Sinyal panah diletakkan pas menempel pada level batas garis statis
                 if (isBuy) {
                     buyArrows.push({ time: data[i].time, value: lowLevel });
                 } else if (isSell) {
@@ -899,7 +877,7 @@
             return { upper, lower, buyArrows, sellArrows };
         }
 
-        // Inisialisasi Aplikasi Saat Halaman Dibuka Pertama Kali
+        // Memulai pengambilan data inisial saat aplikasi diluncurkan
         fetchMarketData();
     </script>
 </body>
