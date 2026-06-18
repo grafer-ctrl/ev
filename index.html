@@ -66,7 +66,6 @@
             gap: 10px;
         }
 
-        /* Status & API Badge */
         .status-container {
             display: flex;
             align-items: center;
@@ -110,7 +109,6 @@
             100% { opacity: 0.4; }
         }
 
-        /* Responsive Layout Grid Chart */
         .charts-wrapper {
             background-color: #000000;
             border-radius: 8px;
@@ -118,7 +116,7 @@
             border: 1px solid #1f2a45;
             display: flex;
             flex-direction: column;
-            height: 650px; /* Tinggi default di desktop */
+            height: 650px;
         }
 
         .chart-pane {
@@ -127,17 +125,64 @@
         }
 
         #main-chart {
-            flex: 6.3; 
-            min-height: 300px;
+            flex: 5.5;
+            min-height: 280px;
         }
 
         #sub-chart {
-            flex: 3.7; 
-            min-height: 180px;
+            flex: 3.5;
+            min-height: 160px;
             border-top: 1px solid #1f2a45;
         }
 
-        /* Kustomisasi Khusus untuk Tampilan Layar HP Agar Presisi Tanpa Terpotong */
+        /* Strength Panel */
+        .strength-panel {
+            background: #0a0e1a;
+            border: 1px solid #1f2a45;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+
+        .strength-item {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: 8px 6px;
+            border-radius: 8px;
+            background: #131b2e;
+            border: 1px solid #1f2a45;
+        }
+
+        .strength-item .label {
+            font-size: 10px;
+            color: #787b86;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .strength-item .value {
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .value-sell { color: #ef5350; }
+        .value-neutral { color: #ffd700; }
+        .value-buy { color: #26a69a; }
+
+        .strength-divider {
+            width: 1px;
+            height: 40px;
+            background: #1f2a45;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 0;
@@ -157,20 +202,19 @@
                 align-items: flex-start;
                 gap: 8px;
             }
-            /* Menghilangkan border lengkung luar agar presisi melebar di layar HP */
             .charts-wrapper {
-                height: 520px; 
+                height: 480px;
                 border-radius: 0;
                 border-left: none;
                 border-right: none;
             }
             #main-chart {
-                flex: 6;
-                min-height: 280px;
+                flex: 5;
+                min-height: 250px;
             }
             #sub-chart {
                 flex: 4;
-                min-height: 180px;
+                min-height: 150px;
             }
             .controls-panel {
                 padding: 10px;
@@ -182,9 +226,25 @@
                 margin-left: 0;
                 width: 100%;
             }
+            .strength-panel {
+                padding: 10px 8px;
+                gap: 6px;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            .strength-item {
+                min-width: 60px;
+                padding: 6px 4px;
+            }
+            .strength-item .value {
+                font-size: 18px;
+            }
+            .strength-divider {
+                height: 30px;
+            }
         }
 
-        /* Control Panel Styles */
         .controls-panel {
             display: grid;
             grid-template-columns: 1fr;
@@ -241,7 +301,6 @@
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
 
-        /* Collapsible Parameter Panel */
         .accordion-header {
             background-color: #131b2e;
             color: #ffffff;
@@ -312,7 +371,6 @@
             cursor: pointer;
         }
 
-        /* Error/Info Box */
         #alert-box {
             display: none;
             background-color: rgba(255, 0, 0, 0.1);
@@ -337,28 +395,40 @@
             </div>
         </header>
 
-        <!-- Dynamic Warning/Alert Panel -->
         <div id="alert-box"></div>
 
         <!-- Charts Container Grid -->
         <div class="charts-wrapper">
-            <!-- Upper Chart Pane -->
             <div id="main-chart" class="chart-pane"></div>
-            <!-- Lower Chart Pane (Sub Window) -->
             <div id="sub-chart" class="chart-pane"></div>
         </div>
 
-        <!-- Dashboard Controls Area -->
+        <!-- STRENGTH INDICATOR -->
+        <div class="strength-panel">
+            <div class="strength-item">
+                <div class="label">SELL</div>
+                <div class="value value-sell" id="strength-sell">0%</div>
+            </div>
+            <div class="strength-divider"></div>
+            <div class="strength-item">
+                <div class="label">NEUTRAL</div>
+                <div class="value value-neutral" id="strength-neutral">0%</div>
+            </div>
+            <div class="strength-divider"></div>
+            <div class="strength-item">
+                <div class="label">BUY</div>
+                <div class="value value-buy" id="strength-buy">0%</div>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
         <div class="controls-panel">
             <div class="controls-row">
-                <!-- Assets Selector -->
+                <!-- Pair Selector -->
                 <button class="btn active" id="pair-gbpusd" onclick="setPair('GBP/USD')">GBP/USD</button>
                 <button class="btn" id="pair-eurusd" onclick="setPair('EUR/USD')">EUR/USD</button>
                 
-                <!-- Timeframe Selector -->
-                <button class="btn" id="tf-m5" onclick="setTimeframe('5min', 'M5')">M5</button>
-                <button class="btn" id="tf-m15" onclick="setTimeframe('15min', 'M15')">M15</button>
-                <button class="btn" id="tf-m30" onclick="setTimeframe('30min', 'M30')">M30</button>
+                <!-- Timeframe Selector - ONLY H1, H4, D1 -->
                 <button class="btn active" id="tf-h1" onclick="setTimeframe('1h', 'H1')">H1</button>
                 <button class="btn" id="tf-h4" onclick="setTimeframe('4h', 'H4')">H4</button>
                 <button class="btn" id="tf-d1" onclick="setTimeframe('1day', 'D1')">D1</button>
@@ -399,7 +469,7 @@
                     </div>
                     <div class="param-row">
                         <label>High Level (Sell Limit)</label>
-                        <input type="number" id="inp-vbox-high" value="80" onchange="recalculateAndRender()"> <!-- Default diubah ke 80 -->
+                        <input type="number" id="inp-vbox-high" value="80" onchange="recalculateAndRender()">
                     </div>
                     <div class="param-row">
                         <label>Low Level (Buy Limit)</label>
@@ -428,14 +498,19 @@
     </div>
 
     <script>
-        // Global variables (Default H1) [5]
+        // Global variables
         let currentPair = 'GBP/USD';
         let currentInterval = '1h'; 
         let currentLabel = 'H1';
         let rawPriceData = []; 
         const twelveDataApiKey = '8cd5e84fa4564322b907aaddac29b059';
 
-        // ----------------- INTI CHART RENDERING (Lightweight Charts) -----------------
+        // DOM refs untuk strength
+        const strengthSell = document.getElementById('strength-sell');
+        const strengthNeutral = document.getElementById('strength-neutral');
+        const strengthBuy = document.getElementById('strength-buy');
+
+        // ----------------- INTI CHART RENDERING -----------------
         const mainContainer = document.getElementById('main-chart');
         const subContainer = document.getElementById('sub-chart');
 
@@ -453,25 +528,24 @@
                 borderColor: '#1f2a45',
                 autoScale: true, 
             },
-            timeScale: { visible: false, borderColor: '#1f2a45' }, 
-            // KUNCI DAN BATASI INTERAKSI MOBILITAS (Anti Squeeze / Lompat Skala)
+            timeScale: { visible: false, borderColor: '#1f2a45' },
             handleScale: {
                 axisPressedMouseMove: {
                     time: true,
-                    price: false, // Menghalangi drag skala harga atas-bawah
+                    price: false,
                 },
                 axisDoubleClickReset: {
                     time: true,
                     price: true,
                 },
-                mouseWheel: false, // Mematikan scroll zoom mouse
-                pinch: false,      // Mematikan cubit zoom layar HP
+                mouseWheel: false,
+                pinch: false,
             },
             handleScroll: {
                 mouseWheel: false,
                 pressedMouseMove: true,
-                horzTouchDrag: true,  // Mengizinkan geser kiri-kanan melihat histori
-                vertTouchDrag: false, // Mematikan geser atas-bawah layar agar tetap kokoh
+                horzTouchDrag: true,
+                vertTouchDrag: false,
             }
         });
 
@@ -510,7 +584,7 @@
             }
         });
 
-        // Series untuk Main Chart (TradingView Modern Style)
+        // Series untuk Main Chart
         const candlestickSeries = mainChart.addCandlestickSeries({
             upColor: '#26a69a',
             downColor: '#ef5350',
@@ -520,7 +594,6 @@
             borderDownColor: '#ef5350',
         });
 
-        // Main Chart Box Indicator (Ungu/Magenta di belakang candle)
         const boxHistSeries = mainChart.addAreaSeries({
             topColor: 'rgba(186, 85, 211, 0.45)', 
             bottomColor: 'rgba(186, 85, 211, 0.45)',
@@ -530,31 +603,27 @@
             lastValueVisible: false,
         });
 
-        // 3 Garis Envelopes di Main Chart
         const mainEnvMiddle = mainChart.addLineSeries({ color: '#1e90ff', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
         const mainEnvUpper = mainChart.addLineSeries({ color: '#ff1493', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
         const mainEnvLower = mainChart.addLineSeries({ color: '#ffffff', lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
 
-        // Series untuk Sub-Window Chart (0 sampai 100)
+        // Series untuk Sub-Window
         const subHistogram = subChart.addHistogramSeries({
             base: 0,
             priceLineVisible: false,
             lastValueVisible: false,
         });
 
-        // Garis Levels Statis (85 Gold, 15 Aqua)
         const subLevelHigh = subChart.addLineSeries({ color: '#ffd700', lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: false });
         const subLevelLow = subChart.addLineSeries({ color: '#00ffff', lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, priceLineVisible: false, lastValueVisible: false });
 
-        // Envelopes di Sub-Window
         const subEnvUpper = subChart.addLineSeries({ color: '#00ff00', lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
         const subEnvLower = subChart.addLineSeries({ color: '#ff0000', lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false });
 
-        // Garis Tambahan Transparan untuk Menstabilkan Batas Atas & Bawah Y-Axis [0, 100]
         const subBoundary0 = subChart.addLineSeries({ color: 'transparent', lineWidth: 0, priceLineVisible: false, lastValueVisible: false });
         const subBoundary100 = subChart.addLineSeries({ color: 'transparent', lineWidth: 0, priceLineVisible: false, lastValueVisible: false });
 
-        // Sinkronisasi Interaksi Zoom/Scroll kedua chart [5]
+        // Sinkronisasi
         let isSyncing = false;
         mainChart.timeScale().subscribeVisibleTimeRangeChange((range) => {
             if (isSyncing) return;
@@ -570,7 +639,6 @@
             isSyncing = false;
         });
 
-        // Deteksi Perubahan Ukuran Wadah Menggunakan ResizeObserver
         const resizeObserver = new ResizeObserver((entries) => {
             for (let entry of entries) {
                 const { width, height } = entry.contentRect;
@@ -585,8 +653,7 @@
         resizeObserver.observe(mainContainer);
         resizeObserver.observe(subContainer);
 
-        // ----------------- AMBIL DATA & KONTROL UI -----------------
-
+        // ----------------- UI FUNCTIONS -----------------
         function setPair(pair) {
             currentPair = pair;
             document.getElementById('pair-gbpusd').classList.toggle('active', pair === 'GBP/USD');
@@ -598,7 +665,8 @@
             currentInterval = tf;
             currentLabel = label;
             
-            const tfs = ['m5', 'm15', 'm30', 'h1', 'h4', 'd1'];
+            // Hanya H1, H4, D1
+            const tfs = ['h1', 'h4', 'd1'];
             tfs.forEach(t => {
                 document.getElementById(`tf-${t}`).classList.toggle('active', `tf-${t}` === `tf-${tf.toLowerCase()}`);
             });
@@ -632,6 +700,11 @@
             }
         }
 
+        function triggerRefresh() {
+            fetchMarketData();
+        }
+
+        // ----------------- AMBIL DATA -----------------
         async function fetchMarketData() {
             const statusIndicator = document.getElementById('status-indicator');
             const statusText = document.getElementById('status-text');
@@ -678,11 +751,6 @@
             }
         }
 
-        function triggerRefresh() {
-            fetchMarketData();
-        }
-
-        // Helper parsing datetime
         function parseDatetime(datetimeStr) {
             const parts = datetimeStr.split(' ');
             if (parts.length === 2) {
@@ -695,15 +763,11 @@
             }
         }
 
-        // Fallback generator simulasi real-time sesuai pemetaan detik TF secara presisi
         function generateSimulatedData(pair, interval, count) {
             const data = [];
             let price = pair === 'GBP/USD' ? 1.2500 : 1.0800;
             let secondsPerBar = 3600; 
-            if (interval === '5min') secondsPerBar = 300;
-            else if (interval === '15min') secondsPerBar = 900;
-            else if (interval === '30min') secondsPerBar = 1800;
-            else if (interval === '1h') secondsPerBar = 3600;
+            if (interval === '1h') secondsPerBar = 3600;
             else if (interval === '4h') secondsPerBar = 14400;
             else if (interval === '1day') secondsPerBar = 86400;
 
@@ -724,7 +788,7 @@
             return data;
         }
 
-        // ----------------- LOGIKA MATEMATIS KALKULASI INDIKATOR -----------------
+        // ----------------- KALKULASI INDIKATOR -----------------
 
         function recalculateAndRender() {
             if (rawPriceData.length === 0) return;
@@ -741,26 +805,25 @@
             const envPeriod = parseInt(document.getElementById('inp-env-period').value) || 14;
             const envDev = parseFloat(document.getElementById('inp-env-dev').value) || 20.0;
 
-            // 1. Gambar Candle Utama
+            // 1. Candle Utama
             candlestickSeries.setData(rawPriceData);
 
-            // 2. Gambar Box Histogram Ungu di Layar Utama
+            // 2. Box Histogram Ungu
             const mainBoxData = rawPriceData.map(d => ({
                 time: d.time,
                 value: d.low
             }));
             boxHistSeries.setData(mainBoxData);
 
-            // 3. Kalkulasi 3 Garis Envelopes di Layar Utama (Middle, Upper, Lower)
+            // 3. Envelopes Main
             const mainEnv = calculateStandardEnvelopes(rawPriceData, maPeriod, maDev);
             mainEnvMiddle.setData(mainEnv.middle);
             mainEnvUpper.setData(mainEnv.upper);
             mainEnvLower.setData(mainEnv.lower);
 
-            // 4. Kalkulasi Sub-Window VBox (Stochastic Oscillator)
+            // 4. VBox Sub-Window
             const vboxValues = calculateVBoxIndicator(rawPriceData, lookback, smooth);
 
-            // Tampilkan Histogram Dodger Blue (Bull) dan Deep Pink (Bear)
             const subHistData = [];
             for (let i = 0; i < rawPriceData.length; i++) {
                 const isBull = rawPriceData[i].close >= rawPriceData[i].open;
@@ -772,19 +835,18 @@
             }
             subHistogram.setData(subHistData);
 
-            // 5. Gambar Garis Level Statis 15 & 80
+            // 5. Level Statis
             const levelHighData = rawPriceData.map(d => ({ time: d.time, value: highLevel }));
             const levelLowData = rawPriceData.map(d => ({ time: d.time, value: lowLevel }));
             subLevelHigh.setData(levelHighData);
             subLevelLow.setData(levelLowData);
 
-            // Gambar pembatas atas bawah visual 0 - 100 agar range chart stabil
             const b0 = rawPriceData.map(d => ({ time: d.time, value: 0 }));
             const b100 = rawPriceData.map(d => ({ time: d.time, value: 100 }));
             subBoundary0.setData(b0);
             subBoundary100.setData(b100);
 
-            // 6. Kalkulasi Envelopes & Sinyal Panah pada Sub-Window
+            // 6. Envelopes Sub-Window & Sinyal
             const subEnv = calculateSubWindowEnvelopesAndSignals(
                 rawPriceData, 
                 vboxValues, 
@@ -798,12 +860,18 @@
             subEnvUpper.setData(subEnv.upper);
             subEnvLower.setData(subEnv.lower);
 
-            // Penerapan Sinyal Panah: Buy (Putih) diikat pada Level 15, Sell (Merah) diikat pada Level 80
             subLevelLow.setMarkers(subEnv.buyMarkers);
             subLevelHigh.setMarkers(subEnv.sellMarkers);
+
+            // 7. HITUNG KEKUATAN (SELL / NEUTRAL / BUY)
+            const strength = calculateStrengthPercentages(vboxValues, 14);
+            strengthSell.textContent = strength.sell + '%';
+            strengthNeutral.textContent = strength.neutral + '%';
+            strengthBuy.textContent = strength.buy + '%';
         }
 
-        // Rumus Envelopes standard (SMA ± Deviasi)
+        // ----------------- FUNGSI INDIKATOR -----------------
+
         function calculateStandardEnvelopes(data, period, dev) {
             const middle = [];
             const upper = [];
@@ -826,7 +894,6 @@
             return { middle, upper, lower };
         }
 
-        // Kalkulasi %K Stochastic Oscillator (Representasi VBox)
         function calculateVBoxIndicator(data, lookback, smooth) {
             const rawVBox = [];
 
@@ -853,15 +920,9 @@
                 rawVBox.push(Math.max(0.0, Math.min(100.0, posClose)));
             }
 
-            // Smoothing filter
             const smoothedVBox = [];
             for (let i = 0; i < rawVBox.length; i++) {
-                if (smooth <= 1) {
-                    smoothedVBox.push(rawVBox[i]);
-                    continue;
-                }
-
-                if (i < smooth - 1) {
+                if (smooth <= 1 || i < smooth - 1) {
                     smoothedVBox.push(rawVBox[i]);
                     continue;
                 }
@@ -876,7 +937,6 @@
             return smoothedVBox;
         }
 
-        // Kalkulasi envelope filter di sub-window, dan penyediaan koordinat sinyal panah
         function calculateSubWindowEnvelopesAndSignals(data, vbox, envPeriod, envDev, highLevel, lowLevel, useFilter) {
             const upper = [];
             const lower = [];
@@ -904,7 +964,6 @@
                     lower.push({ time: data[i].time, value: dnVal });
                 }
 
-                // Sinyal Sinyal
                 const currentVal = vbox[i];
                 let isBuy = currentVal <= lowLevel;
                 let isSell = currentVal >= highLevel;
@@ -921,7 +980,7 @@
                     buyMarkers.push({
                         time: data[i].time,
                         position: 'atBar',
-                        color: '#ffffff', // Putih saat buy
+                        color: '#ffffff',
                         shape: 'arrowUp',
                         size: 2
                     });
@@ -929,7 +988,7 @@
                     sellMarkers.push({
                         time: data[i].time,
                         position: 'atBar',
-                        color: '#ff0000', // Merah saat sell
+                        color: '#ff0000',
                         shape: 'arrowDown',
                         size: 2
                     });
@@ -944,7 +1003,41 @@
             };
         }
 
-        // Memulai pengambilan data inisial saat aplikasi diluncurkan
+        // ----------------- FUNGSI HITUNG KEKUATAN -----------------
+        function calculateStrengthPercentages(vbox, lookback = 14) {
+            if (vbox.length < lookback) {
+                return { sell: 0, neutral: 0, buy: 0 };
+            }
+
+            let totalSell = 0, totalNeutral = 0, totalBuy = 0;
+            const start = vbox.length - lookback;
+
+            for (let i = start; i < vbox.length; i++) {
+                const val = vbox[i];
+                if (val > 55) {
+                    totalBuy += (val - 50);
+                } else if (val < 45) {
+                    totalSell += (50 - val);
+                } else {
+                    totalNeutral += 1;
+                }
+            }
+
+            totalNeutral = Math.max(totalNeutral, 0.1);
+            
+            const total = totalSell + totalNeutral + totalBuy;
+            if (total === 0) {
+                return { sell: 33, neutral: 34, buy: 33 };
+            }
+
+            return {
+                sell: Math.round((totalSell / total) * 100),
+                neutral: Math.round((totalNeutral / total) * 100),
+                buy: Math.round((totalBuy / total) * 100)
+            };
+        }
+
+        // Mulai aplikasi
         fetchMarketData();
     </script>
 </body>
